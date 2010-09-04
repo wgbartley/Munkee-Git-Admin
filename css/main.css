@@ -1,0 +1,60 @@
+#tabs {
+	height: 98%;
+	overflow: hidden;
+}
+
+.tab {
+	font-size: 95%;
+	overflow-y: scroll;
+	height: 90%;
+}
+
+.tab_items {
+	margin: 0;
+	padding: 0;
+	padding-bottom: 1em;
+}
+
+.tab_items li {
+	list-style-type: none;
+	margin: 0;
+	padding: 3px;
+}
+
+.tab_items li a { text-decoration: none; }
+
+.tab_items li:hover { background-color: #eee; }
+
+.dialog { display: none; }
+
+.dialog p {
+	clear: both;
+	padding: 0.5em 0;
+	margin: 0;
+}
+
+.dialog label {
+	font-weight: bold;
+	float: left;
+}
+
+.dialog .label_hint {
+	float: right;
+	font-style: italic;
+}
+
+.dialog input, .dialog select, .dialog textarea {
+	font-size: 95%;
+	width: 100%;
+}
+
+.dialog button[type=submit], .dialog button[type=reset] { width: 45%; }
+
+.dialog button[type=reset] { float: left; }
+
+.dialog button[type=submit] { float: right; }
+
+.dialog input[type=checkbox] {
+	width: inherit;
+	float: right;
+}
