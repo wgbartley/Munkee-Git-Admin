@@ -7,7 +7,7 @@ This is a simple and straightforward web interface
 for managing a local git server.  It allows for GUI
 editing of gitosis.conf and user keys.
 
-GitHub: http://github.com/wgbartley/Munkee-s-Git-Admin
+GitHub: http://github.com/wgbartley/Munkee-Git-Admin
 Home Page: http://www.garrettbartley.com/munkees-git-admin/
 
 
