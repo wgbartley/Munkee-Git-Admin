@@ -22,6 +22,8 @@ INSTALL
 2. Edit config.php and change the $gitosis_dir variable
    to point to your gitosis directory.
 3. Password protect using an .htaccess file.
+4. Create a gitosis.conf.bak file in the same directory
+   as gitosis.conf for backups (optional).
 
 
 COPYING

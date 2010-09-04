@@ -380,10 +380,18 @@ EOQ;
 	public function save() {
 		$conf = $this->gen_conf();
 
-		if(@file_put_contents($this->gitosis_dir.'/gitosis.conf',$conf)) {
-			$this->open_conf($this->gitosis_dir.'/gitosis.conf');
+		if($conf!=$this->conf) {
+			/* Back up gitosis.conf */
+			if(is_writable($this->gitosis_dir.'/gitosis.conf.bak'))
+				file_put_contents($this->gitosis_dir.'/gitosis.conf.bak',file_get_contents($this->gitosis_dir.'/gitosis.conf'));
 
-			return TRUE;
+			/* Write gitosis.conf */
+			if(is_writable($this->gitosis_dir.'/gitosis.conf') && @file_put_contents($this->gitosis_dir.'/gitosis.conf',$conf)) {
+				$this->open_conf($this->gitosis_dir.'/gitosis.conf');
+
+				return TRUE;
+			} else
+				return FALSE;
 		} else
 			return FALSE;
 	}
