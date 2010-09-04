@@ -21,6 +21,7 @@ INSTALL
 1. Extract the source to a web directory.
 2. Edit config.php and change the $gitosis_dir variable
    to point to your gitosis directory.
+3. Password protect using an .htaccess file.
 
 
 COPYING
