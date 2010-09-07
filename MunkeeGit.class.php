@@ -166,7 +166,7 @@ class MunkeeGit {
 		else
 			$retval = array('error' => 'Repository already exists');
 
-		if(isset($this->repos[$repo]) && !isest($retval['error']))
+		if(isset($this->repos[$repo]) && !isset($retval['error']))
 			return $this->repos[$repo];
 		else
 			return $retval;
