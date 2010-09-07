@@ -5,11 +5,9 @@ class MunkeeGit {
 	function __construct($gitosis_dir) {
 		$this->gitosis_dir = realpath($gitosis_dir);
 
-		$this->conf = parse_ini_file($this->gitosis_dir.'/gitosis.conf', TRUE);
-		$this->groups = $this->parse_groups($this->conf);
-		$this->repos = $this->parse_repos($this->conf);
+		$this->init();
 
-		$this->keys = $this->parse_keys($this->gitosis_dir.'/keydir/');
+		$this->conf = $this->check_conf();
 	}
 
 
@@ -20,6 +18,14 @@ class MunkeeGit {
 
 	private function open_conf($file) {
 		return parse_ini_file($file, TRUE);
+	}
+
+
+	private function init() {
+		$this->conf = parse_ini_file($this->gitosis_dir.'/gitosis.conf', TRUE);
+		$this->groups = $this->parse_groups($this->conf);
+		$this->repos = $this->parse_repos($this->conf);
+		$this->keys = $this->parse_keys($this->gitosis_dir.'/keydir/');
 	}
 
 
@@ -61,6 +67,33 @@ class MunkeeGit {
 		}
 
 		return $retval;
+	}
+
+
+	private function check_conf() {
+
+		/* Loop through groups */
+		foreach($this->groups as $group) {
+			/* Check that all repos in groups exist */
+			foreach($group['writable'] as $repo)
+				if(!in_array($repo, array_keys($this->repos)))
+					$this->del_repo_from_group($repo, $group['name']);
+
+
+			/* Check that all members in groups exist */
+			foreach($group['members'] as $key)
+				if(!in_array($key, array_keys($this->keys)))
+					$this->del_key_from_group($key, $group['name']);
+		}
+
+
+		/* Save it if something changed */
+		if($this->gen_conf()!=$this->conf)
+			$this->save();
+
+
+		/* Re-initialize stuff */
+		$this->init();
 	}
 
 
@@ -180,6 +213,7 @@ class MunkeeGit {
 
 			foreach(array_keys($this->groups) as $group)
 				$this->del_repo_from_group($repo, $group);
+
 			return TRUE;
 		} else
 			return FALSE;
@@ -207,7 +241,7 @@ class MunkeeGit {
 		$repo = trim($repo);
 		$group = trim($group);
 
-		if(isset($this->groups[$group]) && isset($this->repos[$repo])) {
+		if(isset($this->groups[$group])) {
 			foreach(array_keys($this->groups[$group]['writable']) as $k)
 				if($this->groups[$group]['writable'][$k]==$repo)
 					unset($this->groups[$group]['writable'][$k]);
@@ -222,7 +256,7 @@ class MunkeeGit {
 		$user = trim($user);
 		$group = trim($group);
 
-		if(isset($this->groups[$group]) && isset($this->keys[$user]))
+		if(isset($this->groups[$group]))
 			foreach(array_keys($this->groups[$group]['members']) as $k)
 				if($this->groups[$group]['members'][$k]==$user)
 					unset($this->groups[$group]['members'][$k]);
@@ -345,6 +379,7 @@ class MunkeeGit {
 
 		if(isset($this->keys[$user]) && strlen($key)>0) {
 			$this->keys[$user] = $key;
+			
 			return $this->keys[$user];
 		} else
 			return FALSE;
